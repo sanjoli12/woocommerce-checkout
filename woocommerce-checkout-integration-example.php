@@ -67,8 +67,28 @@ class WC_CIE {
 		// Conditionally hide shipping options. Works with the shortcode-based and block-based checkout.
 		add_filter( 'woocommerce_package_rates', array( __CLASS__, 'filter_shipping_methods' ), 10, 2 );
 
+		// Display a notice above the checkout form.
+		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'add_checkout_notice' ) );
+
 		// Load our integration.
 		add_action( 'init', array( __CLASS__, 'load_integration' ) );
+	}
+
+	/**
+	 * Prints a notice above the checkout form asking the customer to review their order.
+	 *
+	 * @return void
+	 */
+	public static function add_checkout_notice() {
+
+		if ( ! function_exists( 'wc_print_notice' ) ) {
+			return;
+		}
+
+		wc_print_notice(
+			__( 'Please review your order details before placing your order.', 'woocommerce-checkout-integration-example' ),
+			'notice'
+		);
 	}
 
 	/**
